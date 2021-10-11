@@ -27,9 +27,9 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 }); 
 
-// returns the content of the json file
-/* app.get('/api/notes', (req, res) => {
-    res.json(notes)
+// returns the content of the json file - BCS told me to include this to post data but it renders the notes.html page with the db.json and takes away the styling and functionality
+/* app.get('/notes', (req, res) => {
+    res.json(notes);
 }); */
 
 // this directs the user to the notes.html from the Get Started link
@@ -47,7 +47,7 @@ app.post('/notes', (req, res) => {
 });
 
 app.post('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, './db/db.json'))
+    res.sendFile(path.join(__dirname, '/public/notes.html'))
 });
 
 // this is a delete "request handler" for this route
