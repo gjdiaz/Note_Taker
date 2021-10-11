@@ -1,45 +1,60 @@
+// create server object to listen
 const express = require('express');
+const notesData = require('./db/db.json')
+
+// import express function and invoke it to create express application server
 const app = express();
 
 //require the JSON file and assign it to a variable called `notes`
 const PORT = 3001;
-const notes = require('./db/db.json')
 
-// define/configure routes here
-// the routes and route variables are identified in the index.js file
-app.getNotes('/api/notes', function (req, res) {
+// setting static middleware to preprocess static files in public route
+app.use(express.static('public'));
+
+
+
+// define/configure routes (setting up listeners) here
+
+/*app.get('/', function (req, res) {
     // for html route, html tag and text go here
     res.send('GET Request')
-});
+}); */
+
+// file to join get request with... path must be required, like express, if being used
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+}); 
+// response object (res) gets passed into callback function so there is a way to initiate the response back once the request has been processed
+app.get('/api/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/notes.html'));
+  }); 
 // post request gets data from submitted form
-app.saveNote('/api/notes', function (req, res) {
-    res.send('POST Request');
+app.post('/api/notes', function (req, res) {
+    res.send('Note saved.');
 });
 
-app.deleteNote(`/api/notes/${id}`, function (req, res) {
-    res.send('DELETE Request');
-});
+// this is a delete "request handler" for this route
+/* app.delete(`/api/notes/${id}`, function (req, res) {
 
-const server = app.listen(3001, function () {
-    console.log('Node server is running..');
-});
+//when I get a delete request to the above route, then call this function:
+    res.send('Note deleted.');
+}); */ 
 
-// or sets up the Express app to handle data parsing
+
+
+
 // Sets up the Express app to handle data parsing
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// setting static middleware - probably not going to use this..
-app.use(express.static('public'));
 
-// file to join get request with
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
 
-app.get('/api', (req, res) => res.json(notes));
+/* app.get('/api', (req, res) => {
+    res.json(notesData)
+}); */
 
+// tells app to start listening for requests
 app.listen(PORT, () => {
   console.log(`Example app listening at http://localhost:${PORT}`);
 });
