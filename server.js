@@ -7,8 +7,8 @@ const notes = require('./db/db.json');
 // import express function and invoke it to create express application server
 const app = express();
 
-// for heroku: const PORT = process.env.PORT || 3001;
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
+
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
