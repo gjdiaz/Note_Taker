@@ -19,7 +19,7 @@ app.use(express.static('public'));
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 }); 
 
 // this directs the user to the notes.html from the Get Started link
@@ -55,16 +55,17 @@ function updateDb(notes) {
 };
 
 app.use(router);
-/* app.get('*', function (req, res) {
-    res.send('GET Request')
-}); */
+
+app.get('*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+});
 
 // module.exports = router;
 // this is a delete "request handler" for this route
-app.delete(`/api/notes/${noteId}`, function (req, res) {
-    console.log("note deleted")
-    res.send('Note deleted.');
-}); 
+// app.delete(`/api/notes/${noteId}`, function (req, res) {
+//     console.log("note deleted")
+//     res.send('Note deleted.');
+// }); 
 
 // tells app to start listening for requests
 app.listen(PORT, () => {
