@@ -9,7 +9,6 @@ const app = express();
 
 const PORT = process.env.PORT || 3001;
 
-
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -17,51 +16,55 @@ app.use(express.json());
 // setting static middleware to preprocess static files in public route
 app.use(express.static('public'));
 
-// hw readme says to use the method below but it doesn't display the notes.html properly
-/*app.get('*', function (req, res) {
-    res.send('GET Request')
-}); 
-*/
+const router = express.Router();
 
-
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 }); 
 
 // this directs the user to the notes.html from the Get Started link
-app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/notes.html'));
+router.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/notes.html'));
   }); 
-
-app.get('/api/notes', (req, res) => res.json(notes))
 
 // post request gets data from submitted form
 
-app.get('/api/notes', (req, res) => {
-    let notes = JSON.parse(fs.readFileSync('/db/db.json'))
+router.get('/api/notes', (req, res) => {
+    let notes = JSON.parse(fs.readFileSync('./db/db.json'));
+    console.log(notes);
     res.json(notes);
-    console.log("Note added")
+    console.log("Note loaded")
 });
 
 
-app.post('/api/notes', (req, res) => {
+router.post('/api/notes', (req, res) => {
+    let notes = JSON.parse(fs.readFileSync('./db/db.json'));
     let newNote = req.body;
+    let id =
     notes.push(newNote);
-    updateDb();
-    return("New note added");
+    updateDb(notes);
+    console.log("New note added");
+    res.json(notes);
 });
 
-function updateDb() {
-    fs.writeFileSync('/db/db.json', JSON.stringify(notes), (err) => {
+function updateDb(notes) {
+    fs.writeFileSync('./db/db.json', JSON.stringify(notes), (err) => {
         if (err) throw err;
         return true;
     });
 };
 
+app.use(router);
+/* app.get('*', function (req, res) {
+    res.send('GET Request')
+}); */
+
+// module.exports = router;
 // this is a delete "request handler" for this route
-/* app.delete(`/api/notes/${id}`, function (req, res) {
+app.delete(`/api/notes/${noteId}`, function (req, res) {
+    console.log("note deleted")
     res.send('Note deleted.');
-}); */ 
+}); 
 
 // tells app to start listening for requests
 app.listen(PORT, () => {
